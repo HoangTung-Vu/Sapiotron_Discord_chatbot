@@ -33,10 +33,11 @@ def gen_text(mess):
 # print(gen_text("a long passage on how bjt works"))
 
 class Conversation:
-  def __init__(self, id, history):
+  def __init__(self, id, user_id, history):
     self.history = history
     self.chat = model.start_chat(history=self.history)
     self.id = id
+    self.user_id = user_id
   
   def multi_turn_chat(self, mess):
     response =  self.chat.send_message(mess ,generation_config=genai.types.GenerationConfig(
