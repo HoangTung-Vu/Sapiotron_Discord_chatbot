@@ -55,13 +55,13 @@ class MyClient(discord.Client):
                     self.chats.append(conversation)
                     self.chans.append(conversation.id)
 
-            if message.content.startswith("!") and message.channel.id not in self.chans:
-                response = str(gen_text(mess = message.content[1:]))
-                while len(response) > 2000:
-                    split_index = response.rfind('\n', 0, 1900)
-                    await message.channel.send(response[:split_index])
-                    response = response[split_index+1:]
-                await message.channel.send(response)
+        if message.content.startswith("!") and message.channel.id not in self.chans:
+            response = str(gen_text(mess = message.content[1:]))
+            while len(response) > 2000:
+                split_index = response.rfind('\n', 0, 1900)
+                await message.channel.send(response[:split_index])
+                response = response[split_index+1:]
+            await message.channel.send(response)
 
     
 
