@@ -30,11 +30,9 @@ class MyClient(discord.Client):
             conversation = Conversation(id = message.channel.id, history = history)
             self.chats.append(conversation)
             await message.channel.send("Multi-turn chat mode : on. Now you can chat with me")
-            self.multi_turn_chat_mode = True 
             
         if str(message.content) == "!quit":
             await message.channel.send("Multi-turn chat mode : off")
-            self.multi_turn_chat_mode = False
             for conversation in self.chats:
                 if conversation.id == message.channel.id:
                     conversation.reset()
