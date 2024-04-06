@@ -31,13 +31,13 @@ class MyClient(discord.Client):
         if str(message.content.lower()) == "!start":
             history = []
             conversation = Conversation(id = message.channel.id,user_id= message.author.id , history = history)
-            await message.channel.send(f"Multi-turn chat mode : on. Now you can chat with me in this channel, {message.author.name}")
+            await message.channel.send(f"Multi-turn chat mode : on. Now you can chat with me in this channel {message.channel.name}, {message.author.name}")
             self.chats.append(conversation)
             self.channel_user.append([conversation.id, conversation.user_id])
             print(self.chats)
             print(self.channel_user)
             now = time.ctime()
-            file.write(str(now) + str(self.chats)+ str(self.channel_user) +"\n")
+            file.write(str(now) + " " + str(self.chats) + " " + str(self.channel_user) +"\n")
             
         if str(message.content) == "!quit":
             await message.channel.send("Multi-turn chat mode : off")
@@ -49,13 +49,13 @@ class MyClient(discord.Client):
                     print(self.chats)
                     print(self.channel_user)
                     now = time.ctime()
-                    file.write(str(now) + str(self.chats)+ str(self.channel_user)+ "\n")
+                    file.write(str(now) + " " + str(self.chats) + " " + str(self.channel_user) +"\n")
                     
             
         for conversation in self.chats:
             if conversation.id == message.channel.id and conversation.user_id == message.author.id:
                 try:
-                    await message.channel.send(conversation.multi_turn_chat(str(message.content)))
+                    await message.channel.send(f'<@{message.author.id}>' + conversation.multi_turn_chat(str(message.content)))
                     return
                 except Exception as e : 
                     await message.channel.send(e)
