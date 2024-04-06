@@ -39,7 +39,11 @@ class Conversation:
     self.id = id
   
   def multi_turn_chat(self, mess):
-    response =  self.chat.send_message(mess)
+    response =  self.chat.send_message(mess ,generation_config=genai.types.GenerationConfig(
+      candidate_count=1,
+      max_output_tokens=400,
+      temperature=1.0
+    ))
     return str(response.text)
   
   def reset(self):
