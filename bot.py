@@ -17,6 +17,7 @@ class MyClient(discord.Client):
     def __init__(self, intents):
         super().__init__(intents=intents)
         self.chats = []
+        self.chans = []
     async def on_ready(self):
         print(f'{self.user} has connected to Discord!')
 
@@ -29,6 +30,7 @@ class MyClient(discord.Client):
             history = []
             conversation = Conversation(id = message.channel.id, history = history)
             self.chats.append(conversation)
+            self.chans.append(conversation.id)
             await message.channel.send("Multi-turn chat mode : on. Now you can chat with me")
             
         if str(message.content) == "!quit":
@@ -36,10 +38,12 @@ class MyClient(discord.Client):
             for conversation in self.chats:
                 if conversation.id == message.channel.id:
                     self.chats.remove(conversation)
+                    self.chans.remove(conversation.id)
                     #print(self.chats)
             
         for conversation in self.chats:
             if conversation.id == message.channel.id:
+                
                 try:
                     await message.channel.send(conversation.multi_turn_chat(str(message.content)))
                     return
@@ -49,14 +53,15 @@ class MyClient(discord.Client):
                     history = []
                     conversation = Conversation(id = message.channel.id, history=history)
                     self.chats.append(conversation)
+                    self.chans.append(conversation.id)
 
-        if message.content.startswith("!"):
-            response = str(gen_text(mess = message.content[1:]))
-            while len(response) > 2000:
-                split_index = response.rfind('\n', 0, 1900)
-                await message.channel.send(response[:split_index])
-                response = response[split_index+1:]
-            await message.channel.send(response)
+            if message.content.startswith("!") and message.channel.id not in self.chans:
+                response = str(gen_text(mess = message.content[1:]))
+                while len(response) > 2000:
+                    split_index = response.rfind('\n', 0, 1900)
+                    await message.channel.send(response[:split_index])
+                    response = response[split_index+1:]
+                await message.channel.send(response)
 
     
 
