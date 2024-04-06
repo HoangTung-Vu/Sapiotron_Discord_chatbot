@@ -18,7 +18,7 @@ def gen_text(mess):
       mess,
       generation_config=genai.types.GenerationConfig(
           candidate_count=1,
-          max_output_tokens=2000,
+          max_output_tokens=3000,
           temperature=0.5
       )
   )
@@ -41,14 +41,14 @@ class Conversation:
   def multi_turn_chat(self, mess):
     response =  self.chat.send_message(mess ,generation_config=genai.types.GenerationConfig(
       candidate_count=1,
-      max_output_tokens=400,
+      max_output_tokens=1000,
       temperature=1.0
     ))
     return str(response.text)
   
-  def reset(self):
-    self.history = []
-    self.chat = model.start_chat(history=self.history)
+  # def reset(self):
+  #   self.history = []
+  #   self.chat = model.start_chat(history=self.history)
   
   
 # conversation = Conversation()

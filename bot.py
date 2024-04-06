@@ -35,14 +35,20 @@ class MyClient(discord.Client):
             await message.channel.send("Multi-turn chat mode : off")
             for conversation in self.chats:
                 if conversation.id == message.channel.id:
-                    conversation.reset()
                     self.chats.remove(conversation)
                     #print(self.chats)
             
         for conversation in self.chats:
             if conversation.id == message.channel.id:
-                await message.channel.send(conversation.multi_turn_chat(str(message.content)))
-                return
+                try:
+                    await message.channel.send(conversation.multi_turn_chat(str(message.content)))
+                    return
+                except Exception as e : 
+                    await message.channel.send(e)
+                    self.chats.remove(conversation)
+                    history = []
+                    conversation = Conversation(id = message.channel.id, history=history)
+                    self.chats.append(conversation)
 
         if message.content.startswith("!"):
             response = str(gen_text(mess = message.content[1:]))
