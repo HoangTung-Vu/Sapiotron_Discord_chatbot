@@ -30,7 +30,7 @@ class MyClient(discord.Client):
             history = []
             conversation = Conversation(id = message.channel.id, history = history)
             self.chats.append(conversation)
-            self.chans.append(conversation.id)
+            self.chans.append(message.channel.id)
             await message.channel.send("Multi-turn chat mode : on. Now you can chat with me")
             
         if str(message.content) == "!quit":
@@ -38,7 +38,7 @@ class MyClient(discord.Client):
             for conversation in self.chats:
                 if conversation.id == message.channel.id:
                     self.chats.remove(conversation)
-                    self.chans.remove(conversation.id)
+                    self.chans.remove(message.channel.id)
                     #print(self.chats)
             
         for conversation in self.chats:
