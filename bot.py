@@ -61,7 +61,7 @@ class MyClient(discord.Client):
         for conversation in self.chats:
             if conversation.id == message.channel.id and conversation.user_id == message.author.id:
                 try:
-                    await message.channel.send(f'---------------<{message.author.name}>---------------' + conversation.multi_turn_chat(str(message.content)))
+                    await message.channel.send(f'---------------<{message.author.name}>--------------- \n' + conversation.multi_turn_chat(str(message.content)))
                     return
                 except Exception as e : 
                     await message.channel.send(e)
