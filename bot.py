@@ -28,6 +28,8 @@ class MyClient(discord.Client):
         if message.author == self.user:
             return
     
+        if message.content.startswith('#'):
+            return
         if message.content.lower() == "!help":
             with open('help.txt', 'r') as File:
                 instruction = File.read()
