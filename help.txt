@@ -1,0 +1,5 @@
+This chatbot offers two ways to interact: 
+
+* Single-turn questions: Ask the chatbot anything you like! Simply prefix your questions with an exclamation mark ("!"). The bot will respond with a concise answer.
+
+* Multi-turn conversation: Want a more in-depth chat? Use "!start" to initiate a conversation. In this mode, the bot utilizes a higher "temperature" setting, allowing for more creative responses. However, the response length is limited to maintain responsiveness for multiple users. Each user's conversation history is kept separate, ensuring a personalized experience. Messages within this mode will be pinged with your username for clarity. To exit the conversation, simply type "!quit."

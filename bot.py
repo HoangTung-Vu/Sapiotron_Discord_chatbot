@@ -27,7 +27,13 @@ class MyClient(discord.Client):
     async def on_message(self,message):
         if message.author == self.user:
             return
-
+    
+        if message.content.lower() == "!help":
+            with open('help.txt', 'r') as File:
+                instruction = File.read()
+                await message.channel.send(instruction)
+                return
+            
         if str(message.content.lower()) == "!start":
             history = []
             conversation = Conversation(id = message.channel.id,user_id= message.author.id , history = history)
