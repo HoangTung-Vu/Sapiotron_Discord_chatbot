@@ -46,6 +46,7 @@ class MyClient(discord.Client):
             print(self.channel_user)
             now = time.ctime()
             file.write(str(now)+ " " + str(self.channel_user) +"\n")
+            file.close()
             
         if str(message.content) == "!quit":
             await message.channel.send(f"Multi-turn chat mode with <@{message.author.id}> in channel {message.channel.name} : off")
@@ -58,7 +59,7 @@ class MyClient(discord.Client):
                     print(self.channel_user)
                     now = time.ctime()
                     file.write(str(now) + " " + str(self.channel_user) +"\n")
-                    
+                    file.close()
             
         for conversation in self.chats:
             if conversation.id == message.channel.id and conversation.user_id == message.author.id:
