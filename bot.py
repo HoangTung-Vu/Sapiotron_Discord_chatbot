@@ -31,7 +31,7 @@ class MyClient(discord.Client):
         if str(message.content.lower()) == "!start":
             history = []
             conversation = Conversation(id = message.channel.id,user_id= message.author.id , history = history)
-            await message.channel.send(f"Multi-turn chat mode : on. Now you can chat with me in this channel {message.channel.name}, {message.author.name}")
+            await message.channel.send(f"Multi-turn chat mode : on. Now <@{message.author.id}> can chat with me in this channel : {message.channel.name} ! ")
             self.chats.append(conversation)
             self.channel_user.append([conversation.id, conversation.user_id])
             print(self.chats)
