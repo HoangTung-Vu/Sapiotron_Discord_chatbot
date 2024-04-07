@@ -19,7 +19,7 @@ def gen_text(mess):
       generation_config=genai.types.GenerationConfig(
           candidate_count=1,
           max_output_tokens=3000,
-          temperature=0.5
+          temperature=0.2
       )
   )
   # print(f"Response object: {res}")
@@ -43,7 +43,7 @@ class Conversation:
     response =  self.chat.send_message(mess ,generation_config=genai.types.GenerationConfig(
       candidate_count=1,
       max_output_tokens=1000,
-      temperature=1.0
+      temperature=0.9
     ))
     return str(response.text)
   
