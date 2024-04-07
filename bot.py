@@ -40,7 +40,7 @@ class MyClient(discord.Client):
             file.write(str(now)+ " " + str(self.channel_user) +"\n")
             
         if str(message.content) == "!quit":
-            await message.channel.send("Multi-turn chat mode : off")
+            await message.channel.send(f"Multi-turn chat mode with {message.author.name} in channel {message.channel.name} : off")
             for conversation in self.chats:
                 if conversation.id == message.channel.id and conversation.user_id == message.author.id:
                     self.chats.remove(conversation)
