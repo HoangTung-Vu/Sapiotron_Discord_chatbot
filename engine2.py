@@ -31,7 +31,6 @@ def get_img(message):
         url = message.attachments[0].url
         #print(url)
         if url.startswith("https://cdn.discordapp.com"):
-            print("yes")
             r = requests.get(url, stream=True)
             image_name = "temp_img/" + str(uuid.uuid4()) + '.jpg'
             with open(image_name, 'wb') as out_file :

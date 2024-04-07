@@ -89,6 +89,9 @@ class MyClient(discord.Client):
             else:
                 #print("save : " + str(img))
                 print(img)
+                now = time.ctime()
+                with open('log.txt', 'a+') as file:
+                    file.write(str(now) + " : image : "+ img)
                 prompt = message.content[1:]
                 response = gen_text_img(img_path=img, prompt=prompt)
                 await message.channel.send(response)
