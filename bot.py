@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from engine import gen_text, Conversation
 import time
 from engine2 import gen_text_img, get_img
+from google.ai.generativelanguage import Part, Content
+from google.generativeai.types import content_types
 
 load_dotenv(dotenv_path='.env')
 key = 'KEY'
@@ -22,6 +24,49 @@ class MyClient(discord.Client):
         self.chats = []
         self.channel_user = []
     
+    def start_multi__turn(self, message):
+        history = []
+        conversation = Conversation(id = message.channel.id,user_id= message.author.id , history = history)
+        self.chats.append(conversation)
+        self.channel_user.append([conversation.id, conversation.user_id])
+        #print(self.chats)
+        #print(self.channel_user)
+        now = time.ctime()
+        with open('log.txt', 'a+') as file:
+            file.write(str(now)+ " " + str(self.channel_user) +"\n")
+            file.close()
+    
+    def quit_multi_turn(self, message):
+        for conversation in self.chats:
+            if conversation.id == message.channel.id and conversation.user_id == message.author.id:
+                self.chats.remove(conversation)
+                self.channel_user.remove([conversation.id, conversation.user_id])
+                with open('history.txt', "a+") as file:
+                    file.write(str(conversation.chat.history))
+                    file.close()
+                del conversation
+                #print(self.chats)
+                #print(self.channel_user)
+                now = time.ctime()
+                with open('log.txt', 'a+') as file:
+                    file.write(str(now)+ " " + str(self.channel_user) +"\n")
+                    file.close()
+                
+    
+    def try_get_img(self, message):
+        img = get_img(message=message)
+        if img == 0 : 
+            return 0
+        else:
+            now = time.ctime()
+            with open('log.txt', 'a+') as file:
+                file.write(str(now) + " : image : "+ img)
+            prompt = message.content[1:]
+            response = gen_text_img(img_path=img, prompt=prompt)
+            os.remove(img)
+            return response
+    
+        
     async def on_ready(self):
         print(f'{self.user} has connected to Discord!')
 
@@ -39,36 +84,32 @@ class MyClient(discord.Client):
                 return
             
         if str(message.content.lower()) == "!start":
-            history = []
-            conversation = Conversation(id = message.channel.id,user_id= message.author.id , history = history)
+            self.start_multi__turn(message = message)
             await message.channel.send(f"Multi-turn chat mode : on. Now <@{message.author.id}> can chat with me in this channel : {message.channel.name} ! ")
-            self.chats.append(conversation)
-            self.channel_user.append([conversation.id, conversation.user_id])
-            print(self.chats)
-            print(self.channel_user)
-            now = time.ctime()
-            with open('log.txt', 'a+') as file:
-                file.write(str(now)+ " " + str(self.channel_user) +"\n")
-                file.close()
+           
             
         if str(message.content) == "!quit":
+            self.quit_multi_turn(message = message)
             await message.channel.send(f"Multi-turn chat mode with <@{message.author.id}> in channel {message.channel.name} : off")
-            for conversation in self.chats:
-                if conversation.id == message.channel.id and conversation.user_id == message.author.id:
-                    self.chats.remove(conversation)
-                    self.channel_user.remove([conversation.id, conversation.user_id])
-                    del conversation
-                    print(self.chats)
-                    print(self.channel_user)
-                    now = time.ctime()
-                    with open('log.txt', 'a+') as file:
-                        file.write(str(now)+ " " + str(self.channel_user) +"\n")
-                        file.close()
+
             
         for conversation in self.chats:
             if conversation.id == message.channel.id and conversation.user_id == message.author.id:
+                response = self.try_get_img(message)
                 try:
-                    await message.channel.send(f'---------------<{message.author.name}>--------------- \n' + conversation.multi_turn_chat(str(message.content)))
+                    if response == 0:
+                        await message.channel.send(f'---------------<{message.author.name}>--------------- \n' + conversation.multi_turn_chat(str(message.content)))
+                        # print((conversation.chat.history[1].parts))
+                    else :
+                        req = content_types.to_content(str(message.content))
+                        req.role = "user"
+                        res = content_types.to_content(str(response))
+                        res.role = "model"
+                        #print(req)
+                        #print(res)
+                        conversation.chat.history.append(req)
+                        conversation.chat.history.append(res)
+                        await message.channel.send(response)
                     return
                 except Exception as e : 
                     await message.channel.send(e)
@@ -78,24 +119,15 @@ class MyClient(discord.Client):
                     self.chats.append(conversation)
 
         if message.content.startswith("!") and [message.channel.id, message.author.id] not in self.channel_user:
-            img = get_img(message=message)
-            if img == 0:
+            response = self.try_get_img(message= message)
+            if response == 0:
                 response = str(gen_text(mess = message.content[1:]))
-                while len(response) > 2000:
-                    split_index = response.rfind('\n', 0, 1900)
-                    await message.channel.send(response[:split_index])
-                    response = response[split_index+1:]
-                await message.channel.send(response)
-            else:
-                #print("save : " + str(img))
-                print(img)
-                now = time.ctime()
-                with open('log.txt', 'a+') as file:
-                    file.write(str(now) + " : image : "+ img)
-                prompt = message.content[1:]
-                response = gen_text_img(img_path=img, prompt=prompt)
-                await message.channel.send(response)
-                os.remove(img)
+            while len(response) > 2000:
+                split_index = response.rfind('\n', 0, 1900)
+                await message.channel.send(response[:split_index])
+                response = response[split_index+1:]
+            await message.channel.send(response)
+                
 
 
 client = MyClient(intents=intents)       

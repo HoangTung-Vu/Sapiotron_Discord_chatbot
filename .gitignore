@@ -1,4 +1,6 @@
 .env
 /__pycache__
+history.txt
 log.txt
 /temp_img
+test.py

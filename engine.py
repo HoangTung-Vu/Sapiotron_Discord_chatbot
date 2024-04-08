@@ -18,7 +18,7 @@ def gen_text(mess):
       mess,
       generation_config=genai.types.GenerationConfig(
           candidate_count=1,
-          max_output_tokens=3000,
+          max_output_tokens=5000,
           temperature=0.2
       )
   )
