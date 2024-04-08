@@ -27,7 +27,7 @@ def gen_text(mess):
   if not res.candidates:
     return "The model couldn't generate any content for this prompt."
 
-  response = str(res.text)
+  response = res.text
   return response
   
 # print(gen_text("a long passage on how bjt works"))
@@ -45,7 +45,7 @@ class Conversation:
       max_output_tokens=1000,
       temperature=0.9
     ))
-    return str(response.text)
+    return response.text
   
   # def reset(self):
   #   self.history = []

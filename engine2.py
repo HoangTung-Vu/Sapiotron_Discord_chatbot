@@ -22,9 +22,9 @@ def gen_text_img(img_path, prompt):
     img = Image.open(img_path)
     if prompt == "":
         response = model.generate_content(img)
-        return str(response.text)
+        return response.text
     response = model.generate_content([prompt, img])
-    return str(response.text)
+    return (response.text)
 
 def get_img(message):
     try :

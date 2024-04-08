@@ -39,11 +39,11 @@ class MyClient(discord.Client):
     def quit_multi_turn(self, message):
         for conversation in self.chats:
             if conversation.id == message.channel.id and conversation.user_id == message.author.id:
-                self.chats.remove(conversation)
-                self.channel_user.remove([conversation.id, conversation.user_id])
                 with open('history.txt', "a+") as file:
                     file.write(str(conversation.chat.history))
                     file.close()
+                self.chats.remove(conversation)
+                self.channel_user.remove([conversation.id, conversation.user_id])
                 del conversation
                 #print(self.chats)
                 #print(self.channel_user)
@@ -98,7 +98,7 @@ class MyClient(discord.Client):
                 response = self.try_get_img(message)
                 try:
                     if response == 0:
-                        await message.channel.send(f'---------------<{message.author.name}>--------------- \n' + conversation.multi_turn_chat(str(message.content)))
+                        await message.channel.send(f'---------------<{message.author.name}>--------------- \n' + conversation.multi_turn_chat((message.content)))
                         # print((conversation.chat.history[1].parts))
                     else :
                         req = content_types.to_content(str(message.content))
