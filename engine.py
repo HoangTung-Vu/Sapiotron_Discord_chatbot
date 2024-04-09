@@ -2,6 +2,8 @@ import google.generativeai as genai
 import re
 from dotenv import load_dotenv
 import os
+from safety_mode import safety_settings
+
 
 load_dotenv(dotenv_path='.env')
 key = 'GOOGLE_API_KEY'
@@ -20,7 +22,8 @@ def gen_text(mess):
           candidate_count=1,
           max_output_tokens=5000,
           temperature=0.2
-      )
+      ),
+      safety_settings= safety_settings
   )
   # print(f"Response object: {res}")
 
@@ -44,7 +47,7 @@ class Conversation:
       candidate_count=1,
       max_output_tokens=3000,
       temperature=0.9
-    ))
+    ), safety_settings= safety_settings)
     return response.text
   
   # def reset(self):

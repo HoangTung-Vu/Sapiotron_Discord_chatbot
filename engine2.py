@@ -7,7 +7,7 @@ import requests
 import uuid
 import shutil
 import discord
-
+from safety_mode import safety_settings
 load_dotenv(dotenv_path='.env')
 key = 'GOOGLE_API_KEY2'
 GOOGLE_API_KEY = os.getenv(key = key)
@@ -23,7 +23,7 @@ def gen_text_img(img_path, prompt):
     if prompt == "":
         response = model.generate_content(img)
         return response.text
-    response = model.generate_content([prompt, img])
+    response = model.generate_content([prompt, img], safety_settings=safety_settings)
     return (response.text)
 
 def get_img(message):

@@ -76,8 +76,9 @@ class MyClient(discord.Client):
     
         if message.content.startswith('$'):
             return
-        if message.content.lower() == "!help":
-            with open('help.txt', 'r') as File:
+        
+        if message.content.lower()== "!help":
+            with open('help_vnese.txt', 'r', encoding= 'utf-8') as File:
                 instruction = File.read()
                 await message.channel.send(instruction)
                 return

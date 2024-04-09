@@ -1,0 +1,12 @@
+Chatbot @Sapiotron  cung cấp hai lựa chọn tương tác:
+
+Trả lời nhanh (Quick Answers): Để nhận câu trả lời nhanh, hãy thêm dấu chấm than ("!") vào đầu câu hỏi. Chatbot sẽ không lưu trữ lịch sử giao tiếp.
+
+Trò chuyện nhiều lượt (Multi-Turn Chat): Để bắt đầu một cuộc trò chuyện sâu hơn, hãy gõ "!start". Ở chế độ này, chatbot sẽ sử dụng mức temperature cao hơn, có khả năng cung cấp các câu trả lời sáng tạo hơn. Mỗi người dùng sẽ được duy trì một lịch sử trò chuyện riêng biệt trong từng channel chat để có trải nghiệm cá nhân hóa. Tin nhắn sẽ được gắn thẻ với tên người dùng để rõ ràng. Để thoát chế độ, nhập "!quit".
+
+<!> Trong chế độ trò chuyện nhiều lượt, nó sẽ trả lời mọi tin nhắn của người dùng trong channel đó (channel mà bạn đã nhập lệnh !start). Nếu muốn chatbot bỏ qua một tin nhắn, hãy thêm tiền tố "$" vào đầu tin nhắn đó. 
+
+UPDATE 
+Bot đã có chức năng multi-turn chat mà có kèm cả ảnh
+Quick Answers với ảnh thì như bình thường (chỉ thêm ảnh thôi), bot sẽ phân tích ảnh đầu tiên trong tin nhắn
+Ở multi-turn chat mode, lịch sử trò chuyện chỉ lưu text chứ ko lưu ảnh nên là sẽ phải gửi lại ảnh nếu phản hồi trước đó của nó chưa phân tích đc hết ảnh 
