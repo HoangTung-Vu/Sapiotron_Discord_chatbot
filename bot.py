@@ -39,9 +39,6 @@ class MyClient(discord.Client):
     def quit_multi_turn(self, message):
         for conversation in self.chats:
             if conversation.id == message.channel.id and conversation.user_id == message.author.id:
-                with open('history.txt', "a+") as file:
-                    file.write(str(conversation.chat.history))
-                    file.close()
                 self.chats.remove(conversation)
                 self.channel_user.remove([conversation.id, conversation.user_id])
                 del conversation
@@ -69,13 +66,15 @@ class MyClient(discord.Client):
         
     async def on_ready(self):
         print(f'{self.user} has connected to Discord!')
+        for guild in self.guilds:
+            print(f"- {guild.name} (ID: {guild.id})")
 
 
     async def on_message(self,message):
         if message.author == self.user:
             return
     
-        if message.content.startswith('#'):
+        if message.content.startswith('$'):
             return
         if message.content.lower() == "!help":
             with open('help.txt', 'r') as File:
@@ -86,22 +85,24 @@ class MyClient(discord.Client):
         if str(message.content.lower()) == "!start":
             self.start_multi__turn(message = message)
             await message.channel.send(f"Multi-turn chat mode : on. Now <@{message.author.id}> can chat with me in this channel : {message.channel.name} ! ")
-           
+            return
             
         if str(message.content) == "!quit":
             self.quit_multi_turn(message = message)
             await message.channel.send(f"Multi-turn chat mode with <@{message.author.id}> in channel {message.channel.name} : off")
-
+            return
             
         for conversation in self.chats:
             if conversation.id == message.channel.id and conversation.user_id == message.author.id:
                 response = self.try_get_img(message)
                 try:
                     if response == 0:
-                        await message.channel.send(f'---------------<{message.author.name}>--------------- \n' + conversation.multi_turn_chat((message.content)))
-                        # print((conversation.chat.history[1].parts))
+                        await message.reply(conversation.multi_turn_chat((message.content)), mention_author = False)
                     else :
-                        req = content_types.to_content(str(message.content))
+                        if(message.content == ""):
+                            req = content_types.to_content("an image sent")
+                        else:
+                            req = content_types.to_content(str(message.content))
                         req.role = "user"
                         res = content_types.to_content(str(response))
                         res.role = "model"
@@ -109,10 +110,10 @@ class MyClient(discord.Client):
                         #print(res)
                         conversation.chat.history.append(req)
                         conversation.chat.history.append(res)
-                        await message.channel.send(response)
+                        await message.reply(response, mention_author = False)
                     return
                 except Exception as e : 
-                    await message.channel.send(e)
+                    await message.reply(e, mention_author = False)
                     self.chats.remove(conversation)
                     history = []
                     conversation = Conversation(id = message.channel.id, user_id= message.author.id, history=history)
